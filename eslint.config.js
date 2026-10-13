@@ -1,8 +1,10 @@
 import stylistic from '@stylistic/eslint-plugin';
-import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript';
+import { defineConfig } from 'eslint/config';
 import prettier from 'eslint-config-prettier/flat';
-import importPlugin from 'eslint-plugin-import';
+import importPlugin from 'eslint-plugin-import-x';
 import vue from 'eslint-plugin-vue';
+import tseslint from 'typescript-eslint';
+import vueParser from 'vue-eslint-parser';
 
 const controlStatements = [
     'if',
@@ -21,15 +23,47 @@ const paddingAroundControl = [
     ]),
 ];
 
-export default defineConfigWithVueTs(
+export default defineConfig(
+    tseslint.configs.recommended,
+    {
+        files: ['**/*.{ts,tsx,mts,cts,vue}'],
+        rules: {
+            'no-var': 'error',
+            'prefer-const': 'error',
+            'prefer-rest-params': 'error',
+            'prefer-spread': 'error',
+        },
+    },
+    {
+        files: ['**/*.{ts,tsx,mts,cts,vue}'],
+        languageOptions: {
+            parserOptions: {
+                projectService: true,
+                extraFileExtensions: ['.vue'],
+            },
+        },
+    },
     vue.configs['flat/essential'],
-    vueTsConfigs.recommended,
+    {
+        files: ['**/*.vue'],
+        languageOptions: {
+            parser: vueParser,
+            parserOptions: {
+                parser: tseslint.parser,
+                ecmaVersion: 2024,
+            },
+        },
+        rules: {
+            'vue/block-lang': ['error', { script: { lang: ['ts'] } }],
+        },
+    },
     {
         plugins: {
-            import: importPlugin,
+            'import-x': importPlugin,
         },
         settings: {
-            'import/resolver': {
+            'import-x/internal-regex': '^@/',
+            'import-x/resolver': {
                 typescript: {
                     alwaysTryTypes: true,
                     project: './tsconfig.json',
@@ -47,7 +81,7 @@ export default defineConfigWithVueTs(
                     fixStyle: 'separate-type-imports',
                 },
             ],
-            'import/order': [
+            'import-x/order': [
                 'error',
                 {
                     groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
@@ -57,7 +91,7 @@ export default defineConfigWithVueTs(
                     },
                 },
             ],
-            'import/consistent-type-specifier-style': [
+            'import-x/consistent-type-specifier-style': [
                 'error',
                 'prefer-top-level',
             ],
@@ -77,6 +111,7 @@ export default defineConfigWithVueTs(
     },
     {
         ignores: [
+            '.remember/**',
             'vendor',
             'node_modules',
             'public',

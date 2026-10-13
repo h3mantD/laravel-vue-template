@@ -2,6 +2,22 @@
 
 use App\Models\User;
 
+test('settings navigation redirects authenticated users to their profile', function (string $method): void {
+    $this->actingAs(User::factory()->create())
+        ->call($method, '/settings')
+        ->assertRedirect(route('profile.edit'));
+})->with(['GET', 'HEAD']);
+
+test('settings navigation requires authentication', function (): void {
+    $this->get('/settings')->assertRedirect(route('login'));
+});
+
+test('settings navigation does not accept write requests', function (): void {
+    $this->actingAs(User::factory()->create())
+        ->post('/settings')
+        ->assertMethodNotAllowed();
+});
+
 test('profile page is displayed', function (): void {
     $user = User::factory()->create();
 
