@@ -4,7 +4,7 @@ A strict Laravel + Inertia Vue starter template for personal reuse.
 
 ## Stack
 
-- PHP `8.4.1+`
+- PHP `8.4.27+` or `8.5.12+`
 - Laravel `13`
 - Inertia.js `v3` + Vue `3`
 - Tailwind CSS `v4`
@@ -14,7 +14,7 @@ A strict Laravel + Inertia Vue starter template for personal reuse.
 
 ## Requirements
 
-- PHP `8.4.1+`
+- PHP `8.4.27+` or `8.5.12+`
 - Composer `2+`
 - Node.js `22.13+` or `24+`
 - npm `10+`
